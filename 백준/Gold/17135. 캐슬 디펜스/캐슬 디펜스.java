@@ -2,119 +2,115 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-
-    static int n, m, dist, res;
+    static int N, M, D, result = 0;
+    static int[][] monster_map, copy_map;
     static int[] archer = new int[3];
-    static int[][] castleMap;
-    static List<int[]> monsterGroup = new ArrayList<>();
-
-    static class Node implements Comparable<Node> {
-        int x, y, d;
-        Node(int x, int y, int d) {
-            this.x = x;
-            this.y = y;
-            this.d = d;
-        }
-
-        @Override
-        public int compareTo(Node o) {
-            return this.d == o.d ? this.y - o.y : this.d - o.d;
-        }
-    }
-
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
         StringTokenizer st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        D = Integer.parseInt(st.nextToken());
+        monster_map = new int[N][M];
+        copy_map = new int[N][M];
 
-        n = Integer.parseInt(st.nextToken());
-        m = Integer.parseInt(st.nextToken());
-        dist = Integer.parseInt(st.nextToken());
-
-        castleMap = new int[n][m];
-
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < N; i++) {
             st = new StringTokenizer(br.readLine());
-            for (int j = 0; j < m; j++) {
-                castleMap[i][j] = Integer.parseInt(st.nextToken());
-                if (castleMap[i][j] == 1) monsterGroup.add(new int[]{i, j});
+            for (int j = 0; j < M; j++) {
+                monster_map[i][j] = Integer.parseInt(st.nextToken());
             }
         }
+        locateArcher(0,0);
 
-        setArchers(0, 0);
-        System.out.println(res);
+        System.out.println(result);
         br.close();
     }
 
-    private static void setArchers(int depth, int start) {
-        if (depth == 3) {
-            List<int[]> copiedGroup = deepCopy(monsterGroup);
-            simulateBattle(copiedGroup);
+    // 궁수 배치
+    private static void locateArcher(int depth, int index){
+        if(depth == 3){
+            deepCopy();
+            int killCount = attack();
+            result = Math.max(result, killCount);
             return;
         }
-
-        for (int i = start; i < m; i++) {
+        for (int i = index; i < M; i++) {
             archer[depth] = i;
-            setArchers(depth + 1, i + 1);
+            locateArcher(depth+1, i+1);
         }
     }
 
-    private static List<int[]> deepCopy(List<int[]> original) {
-        List<int[]> copy = new ArrayList<>();
-        for (int[] enemy : original) {
-            copy.add(new int[]{enemy[0], enemy[1]});
-        }
-        return copy;
-    }
+    // 공격
+    private static int attack(){
+        int sum = 0;
+        PriorityQueue<Monster> pq = new PriorityQueue<>();
+        Set<Monster> set = new HashSet<>();
+        for (int p = 0; p < N; p++) {
+            for (int i = 0; i < 3; i++) {
 
-    private static void simulateBattle(List<int[]> enemies) {
-        int killCount = 0;
-
-        while (!enemies.isEmpty()) {
-            Set<String> targets = selectTargets(enemies);
-
-            for (String s : targets) {
-                String[] parts = s.split(",");
-                int tx = Integer.parseInt(parts[0]);
-                int ty = Integer.parseInt(parts[1]);
-
-                enemies.removeIf(enemy -> enemy[0] == tx && enemy[1] == ty);
-                killCount++;
-            }
-
-            moveEnemies(enemies);
-        }
-
-        res = Math.max(res, killCount);
-    }
-
-    private static Set<String> selectTargets(List<int[]> enemies) {
-        Set<String> targets = new HashSet<>();
-
-        for (int i = 0; i < 3; i++) {
-            PriorityQueue<Node> pq = new PriorityQueue<>();
-
-            for (int[] enemy : enemies) {
-                int d = Math.abs(enemy[0] - n) + Math.abs(enemy[1] - archer[i]);
-                if (d <= dist) {
-                    pq.offer(new Node(enemy[0], enemy[1], d));
+                for (int j = 0; j < N; j++) {
+                    for (int k = 0; k < M; k++) {
+                        if (copy_map[j][k] == 1 && (Math.abs(N-j) + Math.abs(archer[i] - k)) <= D){
+                            pq.add(new Monster(k, j, Math.abs(N - j) + Math.abs(archer[i] - k)));
+                        }
+                    }
                 }
+
+                if (!pq.isEmpty()) {
+                    Monster target = pq.poll();
+                    set.add(target);
+                }
+                pq.clear();
             }
 
-            if (!pq.isEmpty()) {
-                Node target = pq.poll();
-                targets.add(target.x + "," + target.y);
+            for (Monster target : set) {
+                copy_map[target.y][target.x] = 0;
+                sum++;
             }
+            set.clear();
+            downMap();
         }
-
-        return targets;
+        return sum;
     }
 
-    private static void moveEnemies(List<int[]> enemies) {
-        for (int i = enemies.size() - 1; i >= 0; i--) {
-            enemies.get(i)[0]++;
-            if (enemies.get(i)[0] == n) {
-                enemies.remove(i);
-            }
+    // Deep Copy
+    private static void deepCopy(){
+        for (int i = 0; i <N; i++) {
+            copy_map[i] = Arrays.copyOf(monster_map[i], M);
+        }
+    }
+
+    // 몬스터 드랍
+    private static void downMap(){
+        for (int i = N-2; i >= 0; i--) {
+            copy_map[i+1] = copy_map[i];
+        }
+        copy_map[0] = new int[M];
+    }
+
+    static class Monster implements Comparable<Monster>{
+        int x, y, dist;
+
+        @Override
+        public boolean equals(Object object) {
+            Monster monster = (Monster) object;
+            return x == monster.x && y == monster.y;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(x, y);
+        }
+
+        public Monster(int x, int y, int dist) {
+            this.x = x;
+            this.y = y;
+            this.dist = dist;
+        }
+        @Override
+        public int compareTo(Monster o) {
+            return this.dist == o.dist ? this.x - o.x : this.dist - o.dist;
         }
     }
 }
