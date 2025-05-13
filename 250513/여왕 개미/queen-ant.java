@@ -1,17 +1,17 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class Main {
     static int N;
     static List<Ant> houses = new ArrayList<>();
     static List<Integer> ants = new ArrayList<>();
+    static int minResult = Integer.MAX_VALUE;
+    static int house_index = 0;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        N =  Integer.parseInt(br.readLine());
+        N = Integer.parseInt(br.readLine());
 
         for (int i = 0; i < N; i++) {
             String[] input = br.readLine().split(" ");
@@ -23,6 +23,7 @@ public class Main {
             } else if (cmd.equals("300")) {
                 demolishHouse(input);
             } else if (cmd.equals("400")) {
+                minResult = Integer.MAX_VALUE; // 매 정찰마다 초기화
                 int time = reconnoitre(input);
                 bw.write(time + "\n");
             }
@@ -30,97 +31,37 @@ public class Main {
 
         bw.flush();
         bw.close();
-
     }
 
-    // 100번 호출 마을 건성
-    private static void townInit(String[] input){
+    private static void townInit(String[] input) {
+        houses.add(new Ant(0, 0)); // dummy
         int num = Integer.parseInt(input[1]);
-        houses.add(new Ant(0, 0));
-
         for (int i = 1; i <= num; i++) {
             houses.add(new Ant(i, Integer.parseInt(input[i + 1])));
         }
+        house_index += num;
     }
 
-    // 200번 호출 개미집 건설
     private static void buildHouse(String[] input) {
-        Ant last_house = houses.get(houses.size() - 1);
-        houses.add(new Ant(last_house.index + 1, Integer.parseInt(input[1])));
+        houses.add(new Ant(house_index + 1, Integer.parseInt(input[1])));
     }
 
-    // 300번 호출 개미집 철거
     private static void demolishHouse(String[] input) {
         int index = Integer.parseInt(input[1]);
         houses.remove(new Ant(index, 0));
     }
 
-    // 400번 호출 개미집 정찰
     private static int reconnoitre(String[] input) {
         int num = Integer.parseInt(input[1]);
-        return recursion(0, 0, num);
+        return recursion(0, 1, num); // index 1부터 시작
     }
 
     private static int recursion(int level, int index, int num) {
-        if(level == num) {
-            int result = -1;
-            List<Integer> houses_pos = new ArrayList<>();
-            List<Integer> ants_pos = new ArrayList<>();
-            boolean[] visited = new boolean[houses.size()];
-            visited[0] = true;
+        if (level == num) {
+            int result = simulate();
 
-            for (int i = 0; i < houses.size(); i++) {
-                houses_pos.add(houses.get(i).pos);
-            }
-
-            for (int i = 0; i < level; i++) {
-                ants_pos.add(ants.get(i));
-            }
-
-            boolean flag = true;
-            while(flag) {
-                result++;
-
-                for (int i = ants_pos.size()-1; i >= 0; i--) {
-                    int ant_pos = ants_pos.get(i);
-                    if(houses_pos.contains(ant_pos)){
-                        int house_seq = houses_pos.indexOf(ant_pos);
-                        if(visited[house_seq]) {
-                            flag = false;
-                            break;
-                        }
-                        visited[house_seq] = true;
-                    }
-
-                    ants_pos.set(i, ant_pos + 1);
-
-                    // 마지막 개미집에 도착했다면, 개미 삭제
-                    if(ant_pos+1 > houses_pos.get(houses.size()-1)){
-                        ants_pos.remove(i);
-                    }
-
-                }
-
-                // 종료 조건 1 전진할 수 있는 개미가 없다면
-                if(ants_pos.isEmpty())
-                    flag = false;
-
-                // 종료 조건 2 모든 개미집을 방문했다면
-                boolean allVisited = true;
-                for (boolean v : visited) {
-                    if (!v) {
-                        allVisited = false;
-                        break;
-                    }
-                }
-                if (allVisited)
-                    break;
-            }
-
-            for (boolean visit : visited) {
-                if(!visit){
-                    return Integer.MAX_VALUE;
-                }
+            if (result < minResult) {
+                minResult = result;
             }
 
             return result;
@@ -129,11 +70,67 @@ public class Main {
         int result = Integer.MAX_VALUE;
         for (int i = index; i < houses.size(); i++) {
             ants.add(houses.get(i).pos);
-            result = Integer.min(recursion(level + 1, i + 1, num), result);
+            result = Math.min(result, recursion(level + 1, i + 1, num));
             ants.remove(ants.size() - 1);
         }
 
         return result;
+    }
+
+    private static int simulate() {
+        List<Integer> ants_pos = new ArrayList<>(ants);
+        Map<Integer, Integer> houseMap = new HashMap<>();
+        for (int i = 0; i < houses.size(); i++) {
+            houseMap.put(houses.get(i).pos, i);
+        }
+
+        boolean[] visited = new boolean[houses.size()];
+        visited[0] = true; // 여왕 개미 집은 항상 true~
+
+        int result = -1;
+        while (true) {
+            result++;
+
+            // 개미 이동 및 충돌 확인
+            for (int i = ants_pos.size() - 1; i >= 0; i--) {
+                int ant_pos = ants_pos.get(i);
+
+                if (houseMap.containsKey(ant_pos)) {
+                    int houseIndex = houseMap.get(ant_pos);
+                    if (visited[houseIndex]) {
+                        return Integer.MAX_VALUE; // 충돌
+                    }
+                    visited[houseIndex] = true;
+                }
+
+                // 이동
+                ants_pos.set(i, ant_pos + 1);
+
+                // 범위 벗어나면 제거
+                if (ant_pos + 1 > houses.get(houses.size() - 1).pos) {
+                    ants_pos.remove(i);
+                }
+            }
+
+            // 개미가 모두 사라졌거나 모든 집 방문했으면 종료
+            if (ants_pos.isEmpty() || allVisited(visited)) {
+                break;
+            }
+
+            // 어차피 최소가 아니야~
+            if (result >= minResult) {
+                return Integer.MAX_VALUE;
+            }
+        }
+
+        return allVisited(visited) ? result : Integer.MAX_VALUE;
+    }
+
+    private static boolean allVisited(boolean[] visited) {
+        for (boolean v : visited) {
+            if (!v) return false;
+        }
+        return true;
     }
 
     static class Ant {
@@ -146,8 +143,10 @@ public class Main {
 
         @Override
         public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
             Ant ant = (Ant) o;
-            return this.index == ant.index;
+            return index == ant.index;
         }
 
         @Override
