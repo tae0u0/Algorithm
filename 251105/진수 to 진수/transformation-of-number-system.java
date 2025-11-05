@@ -13,7 +13,7 @@ public class Main {
             num = num * A + Character.getNumericValue(digits[i]);
         }
 
-        int[] arr = new int[10];
+        int[] arr = new int[20];
         int cnt = 0;
         while(num > B-1){
             arr[cnt++] = num % B;
