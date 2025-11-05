@@ -27,7 +27,7 @@ public class Main {
     private static int getDay(String A) {
         if(A.equals("Mon")) return 1;
         else if(A.equals("Tue")) return 2;
-        else if(A.equals("Wen")) return 3;
+        else if(A.equals("Wed")) return 3;
         else if(A.equals("Thu")) return 4;
         else if(A.equals("Fri")) return 5;
         else if(A.equals("Sat")) return 6;
