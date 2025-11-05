@@ -15,10 +15,11 @@ public class Main {
         for(int i = 1; i<m1; i++) first += num_of_days[i];
         for(int i = 1; i<m2; i++) second += num_of_days[i];
 
-        int dist = second - first + 1;
+        int dist = second - first;
+
         int dist_day_num = getDay(A);
         int ans = 0;
-        if(dist % 7 >= dist_day_num) ans++;
+        if(dist % 7 <= dist_day_num) ans++;
         System.out.print(dist / 7 + ans);
     }
 
