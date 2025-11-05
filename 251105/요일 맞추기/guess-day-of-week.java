@@ -18,9 +18,6 @@ public class Main {
 
 
         switch(dist) {
-            case 0:
-                System.out.print("Mon");
-                break;
             case 1:
                 System.out.print("Tue");
                 break;
@@ -39,6 +36,8 @@ public class Main {
             case 6:
                 System.out.print("Sun");
                 break;
+            default:
+                System.out.print("Mon");
         }
     }
 }
