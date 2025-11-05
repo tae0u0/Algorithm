@@ -15,22 +15,23 @@ public class Main {
         for(int i = 1; i<m1; i++) first += num_of_days[i];
         for(int i = 1; i<m2; i++) second += num_of_days[i];
 
-        int dist = second - first;
+        int dist = second - first + 1;
 
         int dist_day_num = getDay(A);
         int ans = 0;
-        if(dist % 7 <= dist_day_num) ans++;
+        if(dist % 7 >= dist_day_num) ans++;
+        
         System.out.print(dist / 7 + ans);
     }
 
     private static int getDay(String A) {
-        if(A.equals("Mon")) return 0;
-        else if(A.equals("Tue")) return 1;
-        else if(A.equals("Wen")) return 2;
-        else if(A.equals("Thu")) return 3;
-        else if(A.equals("Fri")) return 4;
-        else if(A.equals("Sat")) return 5;
-        
-        return 6;
+        if(A.equals("Mon")) return 1;
+        else if(A.equals("Tue")) return 2;
+        else if(A.equals("Wen")) return 3;
+        else if(A.equals("Thu")) return 4;
+        else if(A.equals("Fri")) return 5;
+        else if(A.equals("Sat")) return 6;
+    
+        return 0;
     }
 }
