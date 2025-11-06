@@ -38,6 +38,7 @@ public class Main {
             }
         }
 
-        System.out.print((max_x - min_x + 1) * (max_y - min_y + 1));
+        if(max_x == 0 && min_x == 3000 && max_y == 0 && min_y == 3000) System.out.print(0);
+        else System.out.print((max_x - min_x + 1) * (max_y - min_y + 1));
     }
 }
