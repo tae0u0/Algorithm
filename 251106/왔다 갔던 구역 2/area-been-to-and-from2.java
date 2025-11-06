@@ -11,9 +11,11 @@ public class Main {
             // Please write your code here.
             for(int k = 0; k < x; k++){
                 if(dir == 'R') {
-                    index[position++]++;
+                    index[position]++;
+                    position++;
                 } else {
-                    index[position--]++;
+                    position--;
+                    index[position]++;
                 }
             }
         }
