@@ -6,8 +6,8 @@ public class Main {
         int n = sc.nextInt();
         int m = sc.nextInt();
         
-        int[] A = new int[1001];
-        int[] B = new int[1001];
+        int[] A = new int[1_000_001];
+        int[] B = new int[1_000_001];
         // Please write your code here.
         int time = 0;
         int cur = 0;
