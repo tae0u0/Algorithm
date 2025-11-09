@@ -42,7 +42,7 @@ public class Main {
         int head = 0;
         int cnt = 0;
 
-        for(int i = 2; i<time; i++){
+        for(int i = 1; i<=time; i++){
             if(A_pos[i] > B_pos[i]) {
                 if(head == 2) cnt++;
                 head = 1;
