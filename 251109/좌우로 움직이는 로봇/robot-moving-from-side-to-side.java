@@ -26,7 +26,7 @@ public class Main {
                 }
             }
         }
-        Arrays.fill(posA, timeA+1, 1_000_000, posA[timeA]);
+        if(timeA < 1_000_000) Arrays.fill(posA, timeA+1, 1_000_000, posA[timeA]);
         
         int timeB = 0;
         for (int i = 0; i < m; i++) {
@@ -45,7 +45,7 @@ public class Main {
                 }
             }
         }
-        Arrays.fill(posB, timeB+1, 1_000_000, posB[timeB]);
+        if(timeB < 1_000_000) Arrays.fill(posB, timeB+1, 1_000_000, posB[timeB]);
         
         // Please write your code here.
         int time = Math.max(timeA, timeB);
