@@ -12,12 +12,14 @@ public class Main {
         }
         // Please write your code here.
         int[] penalty = new int[n+1];
+        int result = -1;
         for(int person_num : penalizedPerson){
             if(k <= ++penalty[person_num]) {
-                System.out.print(person_num);
+                result = person_num;
                 break;
             }
         }
+        System.out.print(result);
 
     }
 }
