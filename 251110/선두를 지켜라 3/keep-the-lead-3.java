@@ -1,54 +1,56 @@
 import java.util.Scanner;
-import java.lang.Math;
 
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         int n = sc.nextInt();
         int m = sc.nextInt();
+
         int[][] a = new int[n][2];
         int[][] b = new int[m][2];
-        int[] distanceA = new int[1_000_001];
-        int[] distanceB = new int[1_000_001];
 
-        int timeA = 1;
+        int[] distA = new int[1_000_001];
+        int[] distB = new int[1_000_001];
+
+        int tA = 1; 
         for (int i = 0; i < n; i++) {
             a[i][0] = sc.nextInt(); // v
             a[i][1] = sc.nextInt(); // t
-            for(int k = 0; k<a[i][1]; k++){
-                distanceA[timeA++] = distanceA[timeA-1] + a[i][0];
+            for (int k = 0; k < a[i][1]; k++) {
+                distA[tA] = distA[tA - 1] + a[i][0];
+                tA++;
             }
         }
-
-        int timeB = 1;
+ 
+        int tB = 1;
         for (int i = 0; i < m; i++) {
             b[i][0] = sc.nextInt();
-            b[i][1] = sc.nextInt();
-              for(int k = 0; k<b[i][1]; k++){
-                distanceB[timeB++] = distanceB[timeB-1] + b[i][0];
+            b[i][1] = sc.nextInt(); 
+            for (int k = 0; k < b[i][1]; k++) {
+                distB[tB] = distB[tB - 1] + b[i][0];
+                tB++;
             }
         }
 
-        boolean[] head = new boolean[2]; // A는 0 B는 1
-        int time = Math.max(timeA, timeB);
+      
+        int last = Math.max(tA, tB);
+        for (int i = tA + 1; i < last; i++) distA[i] = distA[tA];
+        for (int i = tB + 1; i < last; i++) distB[i] = distB[tB];
+
+        int prev = 0;
         int cnt = 0;
-        for(int i = 1; i<=time; i++){
-            if (distanceA[i] > distanceB[i]){
-                if(head[1] == true) cnt++;
-                head[0] = true;
-                head[1] = false;
-            } else if (distanceB[i] > distanceA[i]){
-                if(head[0] == true) cnt++;
-                head[0] = false;
-                head[1] = true;
-            } else {
-                if(head[0] == false || head[1] == false) cnt++;
-                head[0] = true;
-                head[1] = true;
+        for (int i = 1; i < last; i++) {
+            int cur;
+            if (distA[i] > distB[i]) cur = -1;
+            else if (distB[i] > distA[i]) cur = 1;
+            else cur = 0;
+
+            if (cur != prev) {
+                cnt++;
+                prev = cur;
             }
         }
 
-        System.out.print(cnt);
-
+        System.out.println(cnt);
     }
 }
