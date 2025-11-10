@@ -26,8 +26,8 @@ public class Main {
         for(int i = 0; i<T; i++){
             int x = shakes[i][1];
             int y = shakes[i][2];
-            epidemics[x]--;
-            epidemics[y]--;
+            if(isInfected[x]) epidemics[x]--;
+            if(isInfected[y]) epidemics[y]--;
             if((isInfected[x] && epidemics[x] >= 0) || (isInfected[y] && epidemics[y] >= 0)) {
                 isInfected[x] = true;
                 isInfected[y] = true;
