@@ -12,27 +12,20 @@ public class Main {
             y[i] = sc.nextInt();
         }
 
-        int maxIndex = -1;
-        int maxNum = Integer.MIN_VALUE;
-        for(int i = 1; i < n-1; i++) {
-            int dist = Math.abs(x[i] - x[i-1]) + Math.abs(y[i] - y[i-1]);
-            if(maxNum < dist) {
-                maxNum = dist;
-                maxIndex = i;
-            }
-        }
-
-        int origin = 0; int dest = 1;
         int cnt = 0;
-        while(dest < n) {
-            if(dest == maxIndex) {
+        int maxNum = Integer.MIN_VALUE;
+        int origin = 0, dest = 1;
+        for(int i = 1; i<n-1; i++) {
+            while(dest < n) {
+                if(dest == i) {
+                    dest++;
+                    continue;
+                }
+                cnt += (Math.abs(x[origin] - x[dest]) + Math.abs(y[origin] - y[dest]));
+                origin = dest;
                 dest++;
-                continue;
             }
-            int dist = Math.abs(x[dest] - x[origin]) + Math.abs(y[dest] - y[origin]);
-            cnt += dist;
-            origin = dest;
-            dest++;
+            maxNum = Math.max(maxNum, cnt);
         }
 
         System.out.print(cnt);
