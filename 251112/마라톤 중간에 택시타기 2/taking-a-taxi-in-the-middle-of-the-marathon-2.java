@@ -12,10 +12,10 @@ public class Main {
             y[i] = sc.nextInt();
         }
 
-        int cnt = 0;
         int minNum = Integer.MAX_VALUE;
-        int origin = 0, dest = 1;
         for(int i = 1; i<n-1; i++) {
+            int cnt = 0;
+            int origin = 0, dest = 1;
             while(dest < n) {
                 if(dest == i) {
                     dest++;
