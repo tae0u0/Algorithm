@@ -13,7 +13,7 @@ public class Main {
         }
 
         int cnt = 0;
-        int maxNum = Integer.MIN_VALUE;
+        int minNum = Integer.MAX_VALUE;
         int origin = 0, dest = 1;
         for(int i = 1; i<n-1; i++) {
             while(dest < n) {
@@ -25,9 +25,9 @@ public class Main {
                 origin = dest;
                 dest++;
             }
-            maxNum = Math.max(maxNum, cnt);
+            minNum = Math.min(minNum, cnt);
         }
 
-        System.out.print(cnt);
+        System.out.print(minNum);
     }
 }
