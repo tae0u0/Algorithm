@@ -15,7 +15,7 @@ public class Main {
             int cnt = 0;
             for(int k = 0; k < n; k++) {
                 cnt += k * arr[index];
-                index = (index + 1) % 5;
+                index = (index + 1) % n;
             }
             minNum = Math.min(cnt, minNum);
         }
