@@ -35,7 +35,8 @@ public class Main {
                 }
             }
         }
-        System.out.print(rst);
+        if(rst == Integer.MIN_VALUE) System.out.print(-1);
+        else System.out.print(rst);
 
 
     }
