@@ -16,14 +16,8 @@ public class Main {
         for(int i = 0; i<n; i++){
             for(int j = 0; j < n-2; j++) {
                 for(int k = i; k<n; k++) {
-                    int p;
-                    if(j + 3 < n -2) p = j+3;
-                    else {
-                        p = 0;
-                        k++;
-                        if(k >= n) break;
-                    }
-                    for(; p<n-2; p++) {
+                    for(int p = 0; p < n-2; p++) {
+                        if(i == k && j + 2 >= p) continue;
                         int sum = arr[i][j] + arr[i][j+1] + arr[i][j+2] + arr[k][p] + arr[k][p+1] + arr[k][p+2];
                         maxNum = Math.max(sum, maxNum);
                     }
