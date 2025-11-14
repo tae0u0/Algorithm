@@ -1,6 +1,6 @@
 import java.util.Scanner;
 import java.util.Arrays;
-
+import java.lang.Math;
 
 public class Main {
     static class Bucket implements Comparable<Bucket> {
@@ -31,7 +31,7 @@ public class Main {
 
         Arrays.sort(buckets);
         int maxNum = Integer.MIN_VALUE;
-        for(int i = k; i < buckets[n-1].pos; i++) {
+        for(int i = 0; i < buckets[n-1].pos; i++) {
             int prev = i - k;
             int post = i + k;
             int cnt = 0;
