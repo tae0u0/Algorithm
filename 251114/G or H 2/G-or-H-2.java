@@ -31,7 +31,7 @@ public class Main {
         Arrays.sort(arr);
         int maxNum = 0;
         for (int i = 2; i <= n; i += 2) {
-            for (int j = 0; j < n - i; j++) {
+            for (int j = 0; j <= n - i; j++) {
                 int gNum = 0;
                 int hNum = 0;
                 for(int k = j; k < j + i; k++) {
@@ -39,7 +39,7 @@ public class Main {
                     else hNum++;
                 }
                 
-                if(gNum == hNum) {
+                if(gNum == hNum || hNum == 0 || gNum == 0) {
                     maxNum = Math.max(arr[j+i-1].pos - arr[j].pos, maxNum);
                 }
             }
