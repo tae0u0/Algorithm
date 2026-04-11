@@ -1,41 +1,56 @@
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
 public class Main {
+    private static int L, C;
+    private static char[] arr, alpha;
+    private static StringBuilder sb = new StringBuilder();
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int L = Integer.parseInt(st.nextToken());
-        int C = Integer.parseInt(st.nextToken());
-
-        char[] chars = new char[C];
+        L = Integer.parseInt(st.nextToken());
+        C = Integer.parseInt(st.nextToken());
         st = new StringTokenizer(br.readLine());
-        for (int i = 0; i < C; i++) chars[i] = st.nextToken().charAt(0);
-        Arrays.sort(chars);
+        arr = new char[C];
+        alpha = new char[L];
 
-        String vowels = "aeiou";
-        List<String> result = new ArrayList<>();
+        for (int i = 0; i < C; i++) {
+            arr[i] = st.nextToken().charAt(0);
+        }
+        Arrays.sort(arr);
+        back(0, 0);
+        System.out.println(sb.toString());
+    }
 
-        for (int mask = 0; mask < (1 << C); mask++) {
-            if (Integer.bitCount(mask) != L) continue;
-
-            StringBuilder combo = new StringBuilder();
-            int v = 0;
-            for (int i = 0; i < C; i++) {
-                if ((mask & (1 << i)) != 0) {
-                    combo.append(chars[i]);
-                    if (vowels.indexOf(chars[i]) != -1) v++;
+    private static void back(int depth, int index) {
+        if(index == C && depth < L) return;
+        if(depth == L) {
+            if(check()) {
+                for (int i = 0; i < L; i++) {
+                    sb.append(alpha[i]);
                 }
+                sb.append('\n');
             }
-
-            int con = L - v;
-            if (v >= 1 && con >= 2)
-                result.add(combo.toString());
+            return;
         }
 
-        Collections.sort(result);
-        StringBuilder sb = new StringBuilder();
-        for (String s : result) sb.append(s).append("\n");
-        System.out.print(sb);
+        alpha[depth] = arr[index];
+        back(depth + 1, index + 1);
+        back(depth, index + 1);
+    }
+
+    private static boolean check() {
+        int mo = 0, ja = 0;
+
+        for (int i = 0; i < L; i++) {
+            if(alpha[i] == 'a' || alpha[i] == 'e' || alpha[i] == 'i' || alpha[i] == 'o' || alpha[i] == 'u') {
+                mo++;
+            } else {
+                ja++;
+            }
+        }
+
+        return mo >= 1 && ja >= 2;
     }
 }
