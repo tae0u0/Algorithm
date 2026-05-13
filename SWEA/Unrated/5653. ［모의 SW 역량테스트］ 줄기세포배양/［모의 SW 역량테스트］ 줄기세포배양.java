@@ -1,6 +1,6 @@
 import java.util.*;
 import java.io.*;
-
+ 
 class Solution {
     private static int T, N, M, K;
     private static int[][] map, lifeMap;
@@ -8,12 +8,12 @@ class Solution {
     private static int[] dx = {0, 0, -1, 1};
     private static int[] dy = {-1, 1, 0, 0};
     private final static int SIZE = 400 ;
-
+ 
     public static void main(String[] args) throws IOException {
         br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder sb = new StringBuilder();
         T = Integer.parseInt(br.readLine().trim());
-
+ 
         for (int tc = 1; tc <= T; tc++) {
             StringTokenizer st = new StringTokenizer(br.readLine().trim());
             N = Integer.parseInt(st.nextToken());
@@ -24,10 +24,10 @@ class Solution {
             int rst = count();
             sb.append("#").append(tc).append(" ").append(rst).append("\n");
         }
-
+ 
         System.out.println(sb.toString());
     }
-
+ 
     private static void proliferation() {
         Queue<int[]> q = new LinkedList<>();
         for (int time = 1; time < K; time++) {
@@ -45,7 +45,7 @@ class Solution {
                     }
                 }
             }
-
+ 
             while(!q.isEmpty()){
                 int[] ceil = q.poll();
                 int y = ceil[0];
@@ -55,7 +55,7 @@ class Solution {
             }
         }
     }
-
+ 
     private static int count() {
         int cnt = 0;
         for (int row = 0; row < SIZE; row++) {
@@ -66,16 +66,16 @@ class Solution {
         }
         return cnt;
     }
-
+ 
     private static void initMap() throws IOException {
         map = new int[SIZE][SIZE];
         lifeMap = new int[SIZE][SIZE];
-
+ 
         StringTokenizer st;
-
+ 
         for (int row = SIZE / 2; row < SIZE / 2 + N; row++) {
             st = new StringTokenizer(br.readLine().trim());
-
+ 
             for (int col = SIZE / 2; col < SIZE / 2 + M; col++) {
                 int num = Integer.parseInt(st.nextToken());
                 map[row][col] = num;
@@ -83,7 +83,7 @@ class Solution {
             }
         }
     }
-
+ 
     private static boolean isRange(int y, int x) {
         return y >= 0 && x >= 0 && y < SIZE && x < SIZE;
     }
