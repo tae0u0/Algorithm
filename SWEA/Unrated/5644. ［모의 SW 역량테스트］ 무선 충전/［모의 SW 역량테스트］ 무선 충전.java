@@ -1,6 +1,6 @@
 import java.util.*;
 import java.io.*;
-
+ 
 public class Solution {
     private static int T, M, A;
     private static int ax, ay, bx, by;
@@ -11,10 +11,10 @@ public class Solution {
     private static int[] dx = {0, 0, 1, 0, -1}; // X상우하좌
     private static int[] dy = {0, -1, 0, 1, 0}; // X상우하좌
     private static List<Integer> availableA = new ArrayList<>(), availableB = new ArrayList<>();
-
+ 
     private static class BC {
         int x, y, c, p;
-
+ 
         public BC(int x, int y, int c, int p) {
             this.x = x;
             this.y = y;
@@ -22,7 +22,7 @@ public class Solution {
             this.p = p;
         }
     }
-
+ 
     public static void main(String[] args) throws IOException {
         br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder sb = new StringBuilder();
@@ -41,9 +41,9 @@ public class Solution {
         }
         System.out.println(sb.toString());
     }
-
+ 
     private static int getEnergy(){
-
+ 
         for (int i = 0; i <bcArr.length; i++) {
             BC bc = bcArr[i];
             if(Math.abs(bc.y - ay) + Math.abs(bc.x - ax) <= bc.c) {
@@ -82,13 +82,13 @@ public class Solution {
         availableB.clear();
         return rst;
     }
-
+ 
     private static void init() throws IOException {
         StringTokenizer st;
         st = new StringTokenizer(br.readLine());
         M = Integer.parseInt(st.nextToken());
         A = Integer.parseInt(st.nextToken());
-
+ 
         moveA = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
         moveB = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
         bcArr = new BC[A];
